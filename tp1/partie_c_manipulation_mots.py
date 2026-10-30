@@ -7,9 +7,8 @@ mots = ["python", "programmation", "pondu"]
 
 def choisir_mot(liste):
     mot = random.choice(liste)
-    return mot.upper
+    return mot.upper()
 
 
 mot_secret = choisir_mot(mots)
-
 print("Choisis un mot :", mot_secret)
