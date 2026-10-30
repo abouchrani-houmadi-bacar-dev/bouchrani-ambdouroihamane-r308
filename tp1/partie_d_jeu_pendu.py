@@ -20,8 +20,11 @@ def reveler_lettre(mot, masque_mot, lettre):
     for i in range(len(mot)):
         if mot[i] == lettre.upper():
             masque_mot[i] = lettre.upper()
-
     return masque_mot
+
+# Fonction pour vérifier si une lettre a déjà été proposée
+def lettre_deja_proposee(lettre, lettres_proposees):
+    return lettre.upper() in lettres_proposees
 
 # Affichage du mot choisi et du mot masqué
 mot_secret = choisir_mot(mots)
@@ -34,3 +37,9 @@ print("Mot masqué :", mot_masque)
 # Test de la fonction reveler_lettre
 mot_masque = reveler_lettre(mot_secret, mot_masque, "P")
 print("Après avoir proposé P :", mot_masque)
+
+# Test de la fonction lettre_deja_proposee
+lettres_proposees = ["P", "A", "B"]
+
+print(lettre_deja_proposee("P", lettres_proposees))
+print(lettre_deja_proposee("Z", lettres_proposees))
