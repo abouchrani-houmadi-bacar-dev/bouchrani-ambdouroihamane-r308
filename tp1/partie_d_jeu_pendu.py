@@ -10,6 +10,12 @@ def choisir_mot(liste):
     mot = random.choice(liste)
     return mot.upper()
 
+def masque(mot):
+    return ["_" for lettre in mot]
+
+
 mot_secret = choisir_mot(mots)
 print("Mot choisi :", mot_secret)
 
+mot_masque = masque(mot_secret)
+print("Mot masqué :", mot_masque)
