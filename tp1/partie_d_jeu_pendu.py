@@ -48,6 +48,10 @@ def traiter_lettre(mot, masque_mot, lettre, lettres_proposees, erreurs):
 def partie_gagnee(masque_mot):
     return "_" not in masque_mot
 
+# Fonction pour vérifier si le joueur a perdu
+def partie_perdue(erreurs):
+    return erreurs >= MAX_ERREURS
+
 # Affichage du mot choisi et du mot masqué
 mot_secret = choisir_mot(mots)
 print("Mot choisi :", mot_secret)
@@ -83,3 +87,7 @@ print("Nombre d'erreurs :", erreurs)
 # Test de la fonction partie_gagnee
 print("Partie gagnée ?", partie_gagnee(["P", "Y", "T", "H", "O", "N"]))
 print("Partie gagnée ?", partie_gagnee(["P", "_", "T", "H", "O", "N"]))
+
+# Test de la fonction partie_perdue
+print("Partie perdue ?", partie_perdue(7))
+print("Partie perdue ?", partie_perdue(3))
