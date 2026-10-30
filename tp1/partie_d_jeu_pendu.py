@@ -44,6 +44,9 @@ def traiter_lettre(mot, masque_mot, lettre, lettres_proposees, erreurs):
         print("Mauvaise lettre !")
 
     return masque_mot, erreurs
+# Fonction pour vérifier si le joueur a gagné
+def partie_gagnee(masque_mot):
+    return "_" not in masque_mot
 
 # Affichage du mot choisi et du mot masqué
 mot_secret = choisir_mot(mots)
@@ -64,7 +67,6 @@ print(lettre_deja_proposee("P", lettres_proposees))
 print(lettre_deja_proposee("Z", lettres_proposees))
 
 # Test de la fonction traiter_lettre
-
 lettres_proposees = []
 erreurs = 0
 
@@ -77,3 +79,7 @@ mot_masque, erreurs = traiter_lettre(
 print("Mot masqué :", mot_masque)
 print("Lettres proposées :", lettres_proposees)
 print("Nombre d'erreurs :", erreurs)
+
+# Test de la fonction partie_gagnee
+print("Partie gagnée ?", partie_gagnee(["P", "Y", "T", "H", "O", "N"]))
+print("Partie gagnée ?", partie_gagnee(["P", "_", "T", "H", "O", "N"]))
