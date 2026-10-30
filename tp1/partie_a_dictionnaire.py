@@ -1,7 +1,4 @@
-import os
-
-
-#definition d'un dictionnaire pour stocker les notes des étudiants
+#definition d'un dictionnaire pour stocker les notes des étudiant
 
 #Fonction pour ajouter un étudiant et sa note dans le dictionnaire
 def ajouter_etudiant(d, nom, note):
@@ -26,6 +23,25 @@ def sauvegarder_etudiants(d, nom_fichier):
 
     except OSError as erreur:
         print("Erreur lors de la sauvegarde des données :", erreur)
+
+def charger_etudiants(nom_fichier):
+    etudiants = {}
+    try:
+        with open(nom_fichier, "r", encoding="utf-8") as fichier:
+            for ligne in fichier:
+                nom, note = ligne.strip().split(":")
+                etudiants[nom] = float(note)
+
+        print("Données chargées depuis le fichier", nom_fichier)
+        return etudiants
+
+    except FileNotFoundError:
+        print("Le fichier n'existe pas. Aucun étudiant chargé.")
+        return etudiants
+
+    except OSError as erreur:
+        print("Erreur lors du chargement des données :", erreur)
+        return etudiants
         
 
 
@@ -48,3 +64,10 @@ print("Moyenne de la classe:", moyenne_classe(etudiants))
 
 #afficher l'étudiant avec la meilleure note
 print("L'étudiant avec la meilleure note est:", moyenne_classe(etudiants)[0], "avec une note de", moyenne_classe(etudiants)[1])
+
+
+#sauvegarder etudiants dans le fichier "etudiants.txt")
+sauvegarder_etudiants(etudiants, "etudiants.txt")
+
+etudiants_charges = charger_etudiants("etudiants.txt")
+print("Étudiants chargés:", etudiants_charges)
