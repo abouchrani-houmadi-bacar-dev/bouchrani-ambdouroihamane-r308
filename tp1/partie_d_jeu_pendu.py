@@ -2,7 +2,7 @@
 import random
 
 # Listes des mots disponibles 
-mots = ["python", "programmation", "pendu", "développeur"]
+mots = ["PYTHON", "PROGRAMMATION", "PENDU", "DÉVELOPPEUR"]
 
 MAX_ERREURS = 7
 
@@ -52,42 +52,40 @@ def partie_gagnee(masque_mot):
 def partie_perdue(erreurs):
     return erreurs >= MAX_ERREURS
 
-# Affichage du mot choisi et du mot masqué
+
+
+# Lancement du jeu
 mot_secret = choisir_mot(mots)
-print("Mot choisi :", mot_secret)
-
-# Affichage du mot masqué
 mot_masque = masque(mot_secret)
-print("Mot masqué :", mot_masque)
-
-# Test de la fonction reveler_lettre
-mot_masque = reveler_lettre(mot_secret, mot_masque, "P")
-print("Après avoir proposé P :", mot_masque)
-
-# Test de la fonction lettre_deja_proposee
-lettres_proposees = ["P", "A", "B"]
-
-print(lettre_deja_proposee("P", lettres_proposees))
-print(lettre_deja_proposee("Z", lettres_proposees))
-
-# Test de la fonction traiter_lettre
 lettres_proposees = []
 erreurs = 0
 
-mot_masque = masque(mot_secret)
+print("Bienvenue dans le jeu du Pendu !")
+print("Mot à deviner :", " ".join(mot_masque))
+print("Tu as droit à 7 erreurs maximum.")
 
-mot_masque, erreurs = traiter_lettre(
-    mot_secret, mot_masque, "P", lettres_proposees, erreurs
-)
+# Boucle principale du jeu
+while not partie_gagnee(mot_masque) and not partie_perdue(erreurs):
 
-print("Mot masqué :", mot_masque)
-print("Lettres proposées :", lettres_proposees)
-print("Nombre d'erreurs :", erreurs)
+    print("\nMot à deviner :", " ".join(mot_masque))
+    print("Erreurs :", erreurs, "/", MAX_ERREURS)
+    print("Lettres déjà proposées :", lettres_proposees)
 
-# Test de la fonction partie_gagnee
-print("Partie gagnée ?", partie_gagnee(["P", "Y", "T", "H", "O", "N"]))
-print("Partie gagnée ?", partie_gagnee(["P", "_", "T", "H", "O", "N"]))
+    lettre = input("Propose une lettre : ").strip().upper()
 
-# Test de la fonction partie_perdue
-print("Partie perdue ?", partie_perdue(7))
-print("Partie perdue ?", partie_perdue(3))
+    if len(lettre) != 1 or not lettre.isalpha():
+        print("Veuillez entrer une seule lettre valide.")
+        continue
+
+    mot_masque, erreurs = traiter_lettre(
+        mot_secret, mot_masque, lettre, lettres_proposees, erreurs
+
+    )
+
+# Résultat final de la partie
+if partie_gagnee(mot_masque):
+    print("\nBravo ! Tu as gagné !")
+    print("Le mot était :", mot_secret)
+else:
+    print("\nPerdu ! Tu as atteint les 7 erreurs.")
+    print("Le mot secret était :", mot_secret)
