@@ -13,6 +13,7 @@ MENU = """
 4. Rendre un livre
 5. Afficher les livres
 6. Quitter et sauvegarder
+7. Afficher les statistiques
 """
 
 
@@ -82,6 +83,12 @@ def menu(bibliotheque, fichier):
                 continue
             print("Bibliothèque sauvegardée.")
             return 0
+        elif choix == "7":
+            stats = bibliotheque.stats()
+            print(f"Livres au catalogue : {stats['total']}")
+            print(f"Livres empruntés : {stats['empruntes']}")
+            for nom, nombre in stats["par_utilisateur"].items():
+                print(f"- {nom} : {nombre}")
         else:
             print("Choix invalide.")
 

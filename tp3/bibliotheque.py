@@ -73,6 +73,18 @@ class Bibliotheque:
         recherche = auteur.strip().casefold()
         return [livre for livre in self.livres.values() if recherche in livre.auteur.casefold()]
 
+    def stats(self):
+        par_utilisateur = {
+            nom: len(utilisateur.emprunts)
+            for nom, utilisateur in self.utilisateurs.items()
+            if utilisateur.emprunts
+        }
+        return {
+            "total": len(self.livres),
+            "empruntes": sum(par_utilisateur.values()),
+            "par_utilisateur": par_utilisateur,
+        }
+
     def exporter_json(self, fichier):
         livres = [
             {
