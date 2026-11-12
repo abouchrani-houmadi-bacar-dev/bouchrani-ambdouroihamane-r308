@@ -1,7 +1,7 @@
 import argparse
 
 from .grille import Grille
-from .joueurs import JoueurHumain, JoueurIA
+from .joueurs import JoueurHumain, JoueurIA, JoueurIAMalin
 
 
 def jouer_partie(joueur_x, joueur_o):
@@ -32,7 +32,7 @@ def jouer_partie(joueur_x, joueur_o):
 
 
 def main():
-    types_joueurs = {"humain": JoueurHumain, "ia": JoueurIA}
+    types_joueurs = {"humain": JoueurHumain, "ia": JoueurIA, "malin": JoueurIAMalin}
     parser = argparse.ArgumentParser(description="Jouer au morpion.")
     parser.add_argument("--x", choices=types_joueurs, default="humain", help="joueur X")
     parser.add_argument("--o", choices=types_joueurs, default="ia", help="joueur O")
