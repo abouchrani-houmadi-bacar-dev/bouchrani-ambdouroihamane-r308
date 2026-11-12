@@ -1,2 +1,5 @@
 .DS_Store
 etudiants.txt
+__pycache__/
+/bibliotheque.csv
+/bibliotheque.utilisateurs.csv
