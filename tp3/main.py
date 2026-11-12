@@ -1,7 +1,7 @@
 import argparse
 from pathlib import Path
 
-from .bibliotheque import Bibliotheque
+from .bibliotheque import Bibliotheque, fichier_utilisateurs
 from .livre import Livre
 from .utilisateur import Utilisateur
 
@@ -50,10 +50,12 @@ def gerer_emprunt(bibliotheque, choix):
     elif titre not in bibliotheque.livres:
         print("Livre inconnu.")
     elif choix == "3":
-        if bibliotheque.emprunter(nom, titre):
+        if not bibliotheque.livres[titre].disponible:
+            print("Emprunt refusé. Ce livre est déjà emprunté.")
+        elif bibliotheque.emprunter(nom, titre):
             print("Emprunt enregistré.")
         else:
-            print("Emprunt refusé. Ce livre est déjà emprunté.")
+            print("Emprunt refusé. La limite d’emprunts est atteinte.")
     elif bibliotheque.rendre(nom, titre):
         print("Retour enregistré.")
     else:
@@ -86,14 +88,37 @@ def menu(bibliotheque, fichier):
 
 def main():
     parser = argparse.ArgumentParser(description="Gérer une bibliothèque.")
-    parser.add_argument("--fichier", type=Path, default=Path("bibliotheque.csv"))
+    parser.add_argument("--fichier", type=Path, default=Path("bibliotheque.csv"), help="catalogue CSV")
+    parser.add_argument("--limite-emprunts", type=int, help="nombre maximal d’emprunts par utilisateur")
+    parser.add_argument("--auteur", help="chercher dans le catalogue sans ouvrir le menu")
+    parser.add_argument("--export-json", type=Path, help="exporter le catalogue sans ouvrir le menu")
     args = parser.parse_args()
-    bibliotheque = Bibliotheque()
+    if args.limite_emprunts is not None and args.limite_emprunts < 1:
+        parser.error("--limite-emprunts doit être un entier positif")
+    bibliotheque = Bibliotheque(args.limite_emprunts)
     try:
         bibliotheque.charger(args.fichier)
     except (OSError, ValueError) as erreur:
         print(f"Chargement impossible : {erreur}")
         return 1
+    if args.auteur is not None:
+        livres = bibliotheque.rechercher_par_auteur(args.auteur)
+        if not livres:
+            print("Aucun livre trouvé.")
+        for livre in livres:
+            livre.afficher()
+    if args.export_json is not None:
+        catalogues = (args.fichier.resolve(), fichier_utilisateurs(args.fichier).resolve())
+        if args.export_json.resolve() in catalogues:
+            parser.error("choisissez un fichier différent des fichiers CSV pour l’export")
+        try:
+            bibliotheque.exporter_json(args.export_json)
+        except OSError as erreur:
+            print(f"Export impossible : {erreur}")
+            return 1
+        print(f"Catalogue exporté vers {args.export_json}.")
+    if args.auteur is not None or args.export_json is not None:
+        return 0
     try:
         return menu(bibliotheque, args.fichier)
     except (EOFError, KeyboardInterrupt):

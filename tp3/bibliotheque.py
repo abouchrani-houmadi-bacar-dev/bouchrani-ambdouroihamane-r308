@@ -1,4 +1,5 @@
 import csv
+import json
 from pathlib import Path
 from tempfile import NamedTemporaryFile
 
@@ -29,9 +30,10 @@ def _ecrire_csv(chemin, colonnes, lignes):
 
 
 class Bibliotheque:
-    def __init__(self):
+    def __init__(self, limite_emprunts=None):
         self.livres = {}
         self.utilisateurs = {}
+        self.limite_emprunts = limite_emprunts
 
     def ajouter_livre(self, livre):
         if not livre.titre or livre.titre in self.livres:
@@ -50,6 +52,8 @@ class Bibliotheque:
         livre = self.livres.get(titre)
         if utilisateur is None or livre is None:
             return False
+        if self.limite_emprunts is not None and len(utilisateur.emprunts) >= self.limite_emprunts:
+            return False
         return utilisateur.emprunter_livre(livre)
 
     def rendre(self, nom, titre):
@@ -64,6 +68,25 @@ class Bibliotheque:
             print("La bibliothèque est vide.")
         for livre in self.livres.values():
             livre.afficher()
+
+    def rechercher_par_auteur(self, auteur):
+        recherche = auteur.strip().casefold()
+        return [livre for livre in self.livres.values() if recherche in livre.auteur.casefold()]
+
+    def exporter_json(self, fichier):
+        livres = [
+            {
+                "titre": livre.titre,
+                "auteur": livre.auteur,
+                "année": livre.annee,
+                "disponible": livre.disponible,
+                "emprunteur": livre.emprunteur,
+            }
+            for livre in self.livres.values()
+        ]
+        with Path(fichier).open("w", encoding="utf-8") as sortie:
+            json.dump(livres, sortie, ensure_ascii=False, indent=2)
+            sortie.write("\n")
 
     def sauvegarder(self, fichier):
         chemin = Path(fichier)
